@@ -1,6 +1,6 @@
 import unittest
 import os
-
+import csv
 
 def load_csv(f):
     '''
@@ -22,11 +22,12 @@ def load_csv(f):
     with open(full_path) as file:
         reader = csv.reader(file)
         headers = next(reader) 
-        years = headers[1:]  # Extract years (excluding "month" column)
+        years = headers[1:] 
         for year in years:
             data[year] = {}
-
-        for i in range(len(years)):
+        for row in reader:
+            month = row[0]
+            for i in range(len(years)):
                 year = years[i]
                 data[year][month] = row[i + 1]
     return data
@@ -69,16 +70,14 @@ def get_month_avg(d):
     '''
     result = {}
     for year, months in d.items():
-        total = 0
-        count = 0
+        total_sum = 0
+        month_count = 0
         for value in months.values():
-            total += int(value)
-            count += 1
-        avg_value = round(total/count) 
+            total_sum += int(value)  
+            month_count += 1
+        avg_value = round(total_sum/month_count)  
         result[year] = avg_value
     return result
-
-
 
 class dis7_test(unittest.TestCase):
     '''
