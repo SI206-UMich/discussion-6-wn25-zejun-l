@@ -18,6 +18,18 @@ def load_csv(f):
     base_path = os.path.abspath(os.path.dirname(__file__))
     full_path = os.path.join(base_path, f)
     # use this 'full_path' variable as the file that you open
+    data = {}
+    with open(full_path) as file:
+        reader = csv.reader(file)
+        headers = next(reader) 
+        years = headers[1:]  # Extract years (excluding "month" column)
+        for year in years:
+            data[year] = {}
+
+        for i in range(len(years)):
+                year = years[i]
+                data[year][month] = row[i + 1]
+    return data
 
 def get_annual_max(d):
     '''
@@ -31,7 +43,7 @@ def get_annual_max(d):
     Note: Don't strip or otherwise modify strings. Do not change datatypes except where necessary.
         You'll have to change vals to int to compare them. 
     '''
-    pass
+    
 
 def get_month_avg(d):
     '''
@@ -68,6 +80,11 @@ class dis7_test(unittest.TestCase):
 
 def main():
     unittest.main(verbosity=2)
+    print("----------------------------------------------------------------------")
+    flight_dict = load_csv('daily_visitors.csv')
+    print("Output of load_csv:", flight_dict, "\n")
+    print("Output of get_annual_max:", get_annual_max(flight_dict), "\n")
+    print("Output of get_month_avg:", get_month_avg(flight_dict), "\n")
 
 if __name__ == '__main__':
     main()
